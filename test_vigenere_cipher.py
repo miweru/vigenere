@@ -5,12 +5,12 @@ class TestVigenereCipher(unittest.TestCase):
     def test_encrypt(self):
         cipher = VigenereCipher("MYSECRETKEY")
         plaintext = "Hello, World!"
-        expected_ciphertext = "PFQXG, QFDMR!"
+        expected_ciphertext = "T,!PQN?JYVDPV"
         self.assertEqual(cipher.encrypt(plaintext), expected_ciphertext)
 
     def test_decrypt(self):
         cipher = VigenereCipher("MYSECRETKEY")
-        ciphertext = "PFQXG, QFDMR!"
+        ciphertext = "T,!PQN?JYVDPV"
         expected_plaintext = "HELLO, WORLD!"
         self.assertEqual(cipher.decrypt(ciphertext), expected_plaintext)
 

@@ -1,9 +1,36 @@
 import string
+import unicodedata
+
+def replace_umlauts(text):
+    umlauts = {
+        'Ä': 'Ae', 'Ö': 'Oe', 'Ü': 'Ue',
+        'ä': 'ae', 'ö': 'oe', 'ü': 'ue',
+        'ß': 'ss'
+    }
+    for key, value in umlauts.items():
+        text = text.replace(key, value)
+    return text
+
+def replace_emoji(text):
+    result = ''
+    for char in text:
+        try:
+            char_name = unicodedata.name(char)
+            if unicodedata.category(char) in ("So","Sk"):
+                result += char_name.replace('_', ' ').lower() + ' '
+            else:
+                result += char
+        except ValueError:
+            result += char
+    return result
+
+def filter_supported_chars(text, alphabet):
+    return ''.join([c for c in text if c in alphabet])
 
 class VigenereCipher:
     def __init__(self, key):
-        self.key = key.upper()
-        self.alphabet = string.ascii_uppercase
+        self.key = replace_umlauts(key.upper())
+        self.alphabet = string.ascii_uppercase + ' .,!?;'
 
     def _shift_character(self, char, shift, operation):
         if char in self.alphabet:
@@ -19,7 +46,10 @@ class VigenereCipher:
             return char
 
     def _process_text(self, text, operation):
+        text = replace_umlauts(text)
+        text = replace_emoji(text)
         text = text.upper()
+        text = filter_supported_chars(text, self.alphabet)
         processed_text = []
         key_index = 0
 
